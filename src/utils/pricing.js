@@ -1,8 +1,8 @@
 //bestämmer vi själva vad varje produktformat kostar.
 // Varje film kan köpas i tre format: digitalt, Blu-ray eller som affisch.
 
-export const PRODUCT_FORMAT =[
-    { id: 'digital', label: 'Digital' (HD), basePrice: 79 },
+export const PRODUCT_FORMATS = [
+    { id: 'digital', label: 'Digital (HD)', basePrice: 79 },
     { id: 'bluray', label: 'Blu-ray', basePrice: 179},
     { id: 'poster', label: 'Affisch 50x70', basePrice: 149 },
 ];
@@ -24,7 +24,7 @@ export function isNewRelease(releaseDate, today = new Date()) {
 
 /** Hittar ett format via dess id*/
 export function getFormat(formatId) {
-    return PRODUCT_FORMAT.find(f => f.id === formatId) ?? PRODUCT_FORMAT[0]; // default till första formatet
+    return PRODUCT_FORMATS.find(f => f.id === formatId) ?? PRODUCT_FORMATS[0]; // default till första formatet
 }
 /** Formaterar ett belopp i svenska kronor, */
 export function formatPrice(amount) {
@@ -32,6 +32,13 @@ export function formatPrice(amount) {
  const rounded = Math.round(amount);
  const withSpaces = String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     return `${withSpaces} kr`;
+}
+
+/** Räknar ut priset för en film i ett visst format. */
+export function getPrice(movie, formatId = `digital`, today = new Date()) {
+    const format = getFormat(formatId);
+    const supercharge = isNewRelease(movie.release_date, today) ? NEW_RELEASE_SURCHARGE : 0;
+    return format.basePrice + supercharge;
 }
 
 /**
@@ -42,6 +49,7 @@ export function createCartProduct(movie, formatId = `digital`)  {
     return {
         movieId: movie.id,
         title: movie.title,
+        posterPath: movie.poster_path ?? null,
         format: format.id,
         formatLabel: format.label,
         price: getPrice(movie, format.id),
