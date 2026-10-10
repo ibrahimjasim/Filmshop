@@ -76,6 +76,31 @@ export function useMovies({ searchText = '', genreId = null } = {}) {
         return () => controller.abort();
     }, [searchText, genreId, reloadToken]);
 
+    // Hämta nästa sida när page ändras
+    const loadMore = useCallback(async () => {
+        if (loading || loadingMore || page >= totalPages) return;
+
+        setLoadingMore(true);
+        try {
+            const nextPage = page + 1;
+            const data = await fetchPage({ searchText, genreId, page: nextPage });
+            let results = data.results ?? [];
+            if (searchText && genreId) {
+                results = results.filter((movie) =>
+                    (movie.genre_ids ?? movie.genreIds ?? []).includes(genreId)
+                );
+            }
+            setMovies((prev) => mergeUnique(prev, results));
+            setPage(nextPage);
+            setTotalPages(data.totalPages ?? data.total_pages ?? totalPages);
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                setError(err.message || 'Kunde inte ladda fler filmer');
+            }
+        } finally {
+            setLoadingMore(false);
+        }
+    }, [loading, loadingMore, page, totalPages, searchText, genreId]);
 
 
 return { movies, loading, loadingMore, error, loadMore, reload, hasMore: page < totalPages };
