@@ -1,8 +1,7 @@
 /**
  * Horisontell rad med genreknappar.*/
 
-import { StyleSheet } from "react-native";
-import { Pressable, ScrollView } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text } from "react-native";
 import {colors, radius, spacing} from "../constants/theme";
 
 export default function GenreChips({genres, selectedId, onSelect}) {
