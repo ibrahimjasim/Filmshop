@@ -102,7 +102,7 @@ export async function getMovieDetails(movieId, signal) {
     const movie = await request(`/movie/${movieId}`, {}, signal);
     if (!movie.overview) {
         try {
-            const english = await request('/movie/${movieId}', { language: 'en-US' }, signal);
+            const english = await request(`/movie/${movieId}`, { language: 'en-US' }, signal);
             movie.overview = english.overview;
         } catch {
             // Reservhämtningen är inte kritisk – vi visar filmen ändå.
