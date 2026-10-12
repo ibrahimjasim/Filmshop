@@ -37,7 +37,7 @@ export function formatPrice(amount) {
 /** Räknar ut priset för en film i ett visst format. */
 export function getPrice(movie, formatId = `digital`, today = new Date()) {
     const format = getFormat(formatId);
-    const supercharge = isNewRelease(movie.release_date, today) ? NEW_RELEASE_SURCHARGE : 0;
+    const supercharge = isNewRelease(movie?.release_date, today) ? NEW_RELEASE_SURCHARGE : 0;
     return format.basePrice + supercharge;
 }
 
