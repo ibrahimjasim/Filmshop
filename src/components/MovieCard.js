@@ -27,7 +27,7 @@ function MovieCard({ movie, quantityInCart, onPress, onQuickAdd }) {
 
         {isNewRelease(movie.release_date) && (
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>New films</Text>
+            <Text style={styles.badgeText}>NEW</Text>
           </View>
         )}
       </View>
@@ -41,7 +41,7 @@ function MovieCard({ movie, quantityInCart, onPress, onQuickAdd }) {
         </Text>
 
         <View style={styles.footer}>
-          <Text style={styles.price}>från {formatPrice(getPrice(movie, 'digital'))}</Text>
+          <Text style={styles.price}>from {formatPrice(getPrice(movie, 'digital'))}</Text>
 
           {/* Snabbknapp: lägger till digitalt format direkt från listan */}
           <Pressable
