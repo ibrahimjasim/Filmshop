@@ -8,3 +8,27 @@ export const store = configureStore({
         cart: cartReducer, // state.cart = the part handled by cartSlice
     },
 });
+
+export async function setUpCartPersistence() {
+    const savedItems = await loadCart();
+    store.dispatch(hydrateCart(savedItems));
+
+    let previosItems = store.getState().cart.items;
+
+     // subscribe runs after EVERY dispatch in the whole app.
+     store.subscribe(() => {
+        const {items, hydrated} = store.getState().cart;
+
+        //Immer will only get a new array reference when items actually
+        // changed. So a quick !== comparison is enough to avoid unnecessary writes.
+        // "hydrated" stops an empty cart from overwriting saved data before loading is done.
+
+        if (hydrated && items !== previosItems) {
+            previosItems = items;
+            saveCart(items);
+        }
+
+
+     })
+    
+}
