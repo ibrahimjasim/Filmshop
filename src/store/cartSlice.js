@@ -57,7 +57,7 @@ const cartSlice = createSlice({
     },
 
     // Runs ONCE when the app starts and the saved data has been loaded.
-    hydraCart(state, action) {
+    hydrateCart(state, action) {
         state.items = Array.isArray(action.payload) ? action.payload : [];
         state.hydrated = true;
      },
