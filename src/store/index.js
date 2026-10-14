@@ -9,11 +9,11 @@ export const store = configureStore({
     },
 });
 
-export async function setUpCartPersistence() {
+export async function setupCartPersistence() {
     const savedItems = await loadCart();
     store.dispatch(hydrateCart(savedItems));
 
-    let previosItems = store.getState().cart.items;
+    let previousItems = store.getState().cart.items;
 
      // subscribe runs after EVERY dispatch in the whole app.
      store.subscribe(() => {
@@ -23,8 +23,8 @@ export async function setUpCartPersistence() {
         // changed. So a quick !== comparison is enough to avoid unnecessary writes.
         // "hydrated" stops an empty cart from overwriting saved data before loading is done.
 
-        if (hydrated && items !== previosItems) {
-            previosItems = items;
+        if (hydrated && items !== previousItems) {
+            previousItems = items;
             saveCart(items);
         }
 
