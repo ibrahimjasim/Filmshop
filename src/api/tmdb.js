@@ -4,7 +4,7 @@
 
 const BASE_URL = `https://api.themoviedb.org/3`;
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
-const LANGUAGE = `sv-SE`; // svenska titlar och beskrivningar
+const LANGUAGE = `en-US`; // English titles, genres and overviews
 
 
 const API_KEY = process.env.EXPO_PUBLIC_TMDB_API_KEY;
@@ -94,21 +94,9 @@ export async function getGenres(signal) {
     return data.genres??[];
 }
 
-/**
- * Detaljer om en film. Om den svenska beskrivningen saknas
- * hämtar vi den engelska som reserv.
- */
-export async function getMovieDetails(movieId, signal) {
-    const movie = await request(`/movie/${movieId}`, {}, signal);
-    if (!movie.overview) {
-        try {
-            const english = await request(`/movie/${movieId}`, { language: 'en-US' }, signal);
-            movie.overview = english.overview;
-        } catch {
-            // Reservhämtningen är inte kritisk – vi visar filmen ändå.
-         }
-        }
-    return movie;
+/** Details about one movie (overview, runtime, genres...). */
+export function getMovieDetails(movieId, signal) {
+    return request(`/movie/${movieId}`, {}, signal);
 }
 
 /**
