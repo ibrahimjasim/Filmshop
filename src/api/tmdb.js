@@ -23,12 +23,12 @@ export class ApiError extends Error {
 
 function messageForStatus(status) {
     switch (status) {
-        case 401: return `Ogiltig API-nyckel.`;
-        case 404: return `Hittade inte resursen.`;
-        case 429: return `För många förfrågningar.`;
-        default: 
-        return status >= 500? 'TMDb har tekniska problem just nu. Försök igen senare.'
-        : `Något gick fel (felkod ${status}).`;
+        case 401: return `Invalid API key.`;
+        case 404: return `The movie could not be found.`;
+        case 429: return `Too many requests. Please wait a moment.`;
+        default:
+        return status >= 500? 'TMDb is having technical problems right now. Please try again later.'
+        : `Something went wrong (error code ${status}).`;
 
     }
 }
@@ -39,7 +39,7 @@ function messageForStatus(status) {
     @param {AbortSignal} signal optional AbortSignal för att avbryta anropet
  */
 async function request(path, params = {}, signal) {
-    if (!API_KEY) throw new ApiError(`Ingen TMDb API-nyckel satt i miljön.`, 401);
+    if (!API_KEY) throw new ApiError(`No TMDb API key is set in the environment.`, 401);
 
     // Bygg query-strängen
     const query = new URLSearchParams({ language: LANGUAGE, ...params });
@@ -58,7 +58,7 @@ async function request(path, params = {}, signal) {
         // AbortError betyder att VI avbröt anropet – skicka vidare som det är.
         if (err?.name === 'AbortError') throw err;
         // Annars nådde vi aldrig servern
-        throw new ApiError('Kunde inte nå TMDb. Kontrollera din internetanslutning.', 0);
+        throw new ApiError('Could not reach TMDb. Check your internet connection.', 0);
     }
 
     if (!response.ok) {

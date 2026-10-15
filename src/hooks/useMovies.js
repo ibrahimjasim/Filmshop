@@ -95,7 +95,7 @@ export function useMovies({ searchText = '', genreId = null } = {}) {
             setTotalPages(data.totalPages ?? data.total_pages ?? totalPages);
         } catch (err) {
             if (err.name !== 'AbortError') {
-                setError(err.message || 'Kunde inte ladda fler filmer');
+                setError(err.message || 'Could not load more movies');
             }
         } finally {
             setLoadingMore(false);
