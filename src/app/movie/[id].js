@@ -137,21 +137,40 @@ export default function MovieDetailScreen() {
           {inCart ? (
             <View style={{ gap: spacing.sm }}>
               <Text style={styles.inCartText}>
-                <Ionicons name="checkmark-circle" size={16} color={colors.success} /> {inCart.quantity} in your cart
+                <Ionicons name="checkmark-circle" size={16} color={colors.success} /> In your cart
               </Text>
-              <View style={styles.row}>
-                <PrimaryButton
-                  title="−1"
-                  variant="outline"
-                  style={{ flex: 1 }}
+
+              {/* Quantity stepper: [ − ]  quantity  [ + ] */}
+              <View style={styles.stepper}>
+                <Pressable
                   onPress={() => dispatch(decreaseQuantity(cartKey))}
-                />
-                <PrimaryButton
-                  title="+1"
-                  style={{ flex: 1 }}
+                  style={({ pressed }) => [styles.stepButton, pressed && { opacity: 0.7 }]}
+                  hitSlop={8}
+                  accessibilityRole="button"
+                  accessibilityLabel="Decrease quantity"
+                >
+                  <Ionicons name="remove" size={22} color={colors.accent} />
+                </Pressable>
+
+                <Text style={styles.stepCount} accessibilityLabel={`${inCart.quantity} in your cart`}>
+                  {inCart.quantity}
+                </Text>
+
+                <Pressable
                   onPress={() => dispatch(addToCart(createCartProduct(movie, selectedFormat)))}
-                />
+                  style={({ pressed }) => [styles.stepButton, styles.stepButtonFilled, pressed && { opacity: 0.7 }]}
+                  hitSlop={8}
+                  accessibilityRole="button"
+                  accessibilityLabel="Increase quantity"
+                >
+                  <Ionicons name="add" size={22} color={colors.accentText} />
+                </Pressable>
               </View>
+
+              {/* Line total, e.g. "2 × 179 kr = 358 kr" */}
+              <Text style={styles.lineTotal}>
+                {inCart.quantity} × {formatPrice(price)} = {formatPrice(price * inCart.quantity)}
+              </Text>
               <PrimaryButton
                 title="Remove from cart"
                 variant="outline"
@@ -210,5 +229,26 @@ const styles = StyleSheet.create({
   buyBox: { margin: spacing.lg, padding: spacing.lg, backgroundColor: colors.surface, borderRadius: radius.lg, gap: spacing.md },
   bigPrice: { color: colors.accent, fontSize: 28, fontWeight: '800' },
   inCartText: { color: colors.success, fontWeight: '600' },
-  row: { flexDirection: 'row', gap: spacing.sm },
+  stepper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.background,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: spacing.sm,
+  },
+  stepButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    borderWidth: 1.5,
+    borderColor: colors.accent,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  stepButtonFilled: { backgroundColor: colors.accent },
+  stepCount: { color: colors.text, fontSize: 24, fontWeight: '800', minWidth: 48, textAlign: 'center' },
+  lineTotal: { color: colors.textMuted, fontSize: 14, textAlign: 'center' },
 });
